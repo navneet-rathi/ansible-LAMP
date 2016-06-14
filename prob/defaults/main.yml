@@ -1,0 +1,41 @@
+---
+# defaults file for prob
+
+ubuntu_apache_modules:
+  - rewrite
+  - include
+  - headers
+  - proxy
+  - proxy_http
+  - ssl
+  - actions
+  - fastcgi
+ 
+ubuntu_apache_pkgs:
+  - apache2
+  - apache2-mpm-event
+  - libapache2-mod-fastcgi
+
+ubuntu_mysql_pkgs:
+  - mysql-server-5.5
+  - mysql-client-5.5
+  - python-mysqldb
+  - libmysqlclient-dev
+
+
+ubuntu_php_pkgs:
+  - php5-fpm
+  - php5-cgi
+  - php5-cli
+  - php5-curl
+  - php5-json
+  - php5-odbc
+  - php5-tidy
+  - php5-common
+  - php5-xmlrpc
+  - php5-gd
+  - php-pear
+  - php5-dev
+  - php5-imap
+  - php5-mcrypt
+  - php5-mysql	

@@ -1,0 +1,5 @@
+---
+# tasks file for prob
+- include: mysql.yml
+- include: php.yml
+- include: apache2.yml

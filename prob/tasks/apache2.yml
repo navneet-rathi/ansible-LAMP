@@ -1,0 +1,63 @@
+---
+- name : Add Repo | adding repo manually for fast CGI
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root 
+    group: root 
+    mode: "{{ item.mode | default(644) }}"
+  with_items:
+    - { src: 'fastcgi-trusty.list', dest: '/etc/apt/sources.list.d/fastcgi-trusty.list' }
+    
+- name: Install Apache2 | Install Apache2 with default conf
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items: "{{ ubuntu_apache_pkgs }}"
+  
+  notify:
+     - restart apache
+
+
+- name: Enable modules | Enable the apche modules from the file
+  apache2_module: 
+      state=present 
+      name= "{{ item }}"
+  with_items: "{{ ubuntu_apache_modules }}" 
+  notify:
+     - restart apache
+
+
+- name: Enable https | Enable the ssl in apache for https
+  shell: a2ensite default-ssl.conf
+  notify:
+     - restart apache
+
+- name: Copy | Copy the templates to their respestive destination
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+  with_items:
+    - { src: 'index.php.j2', dest: '/var/www/html/index.php', owner: 'www-data', group: 'www-data' }
+  notify:
+    - Restart apache
+
+- name: Remove | Removing index.html
+  shell: rm -rf /var/www/html/index.html
+  
+- name: Add | php5-fpm configuration
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: 'php-fpm.conf.j2', dest: '/etc/apache2/conf-available/php-fpm.conf', owner: 'www-data', group: 'www-data' }
+  notify:
+    - Restart apache 
+
+- name: Enable php5-fpm | Enable php5-fpm with apache
+  shell: sudo a2enconf php-fpm.conf
+  notify:
+    - Restart apache
