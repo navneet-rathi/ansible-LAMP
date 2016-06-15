@@ -15,9 +15,8 @@
     state: latest
     update_cache: yes
   with_items: "{{ ubuntu_apache_pkgs }}"
-  
   notify:
-     - restart apache
+     - Restart apache
 
 
 - name: Enable modules | Enable the apche modules from the file
@@ -26,13 +25,13 @@
       name= "{{ item }}"
   with_items: "{{ ubuntu_apache_modules }}" 
   notify:
-     - restart apache
+     - Restart apache
 
 
 - name: Enable https | Enable the ssl in apache for https
   shell: a2ensite default-ssl.conf
   notify:
-     - restart apache
+     - Restart apache
 
 - name: Copy | Copy the templates to their respestive destination
   template:
