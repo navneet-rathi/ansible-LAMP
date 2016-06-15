@@ -27,6 +27,11 @@
   notify:
      - Restart apache
 
+- name: Enable Modules Apache2 using commands
+  shell: sudo a2enmod "{{ item }}"
+  with_items: "{{ ubuntu_apache_modules }}"
+  notify:
+     - Restart apache
 
 - name: Enable https | Enable the ssl in apache for https
   shell: a2ensite default-ssl.conf
